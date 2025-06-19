@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lưu trữ tài liệu môn Tin học - Tổng hợp các bài giảng, tài liệu tham khảo và đề thi">
+    <title>A3 Chuyên Tin - Tài Liệu</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="./assets/css/styles.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans">
+    <div id="header-container"></div>
+    <main class="container mx-auto px-4 py-8">
+        <section class="mb-12">
+            <div class="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-md border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Tìm kiếm tài liệu</h2>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                    <input type="text" id="search-input" placeholder="Nhập từ khóa để tìm kiếm..." 
+                        class="w-full pl-10 pr-6 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm transition-all duration-300 hover:border-gray-300">
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Tất cả tài liệu</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="documents-grid">
+            </div>
+        </section>
+    </main>
+    <div id="footer-container"></div>
+    <div id="loading-spinner" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+    </div>
+    <script src="./assets/js/main.js"></script>
+    <script src="./assets/js/search.js"></script>
+</body>
+</html>
