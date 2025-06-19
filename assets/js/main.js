@@ -56,7 +56,7 @@ function displayDocuments(documents) {
         card.className = 'bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1 cursor-pointer';
         card.dataset.id = doc.id;
 
-        const filePath = `${window.location.origin}/assets/documents/files/${doc.fileName}`;
+        const filePath = `https://a3chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/${doc.fileName}`;
 
         card.innerHTML = `
             <div class="p-6">
