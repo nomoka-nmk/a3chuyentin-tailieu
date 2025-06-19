@@ -56,7 +56,7 @@ function displayDocuments(documents) {
         card.className = 'bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1 cursor-pointer';
         card.dataset.id = doc.id;
 
-        const filePath = `https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/${doc.fileName}`;
+        const filePath = `https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/${doc.fileName}.html`;
 
         card.innerHTML = `
             <div class="p-6">
@@ -72,7 +72,7 @@ function displayDocuments(documents) {
                 <p class="text-gray-600 text-sm line-clamp-2 mb-4">${doc.description || 'Không có mô tả'}</p>
                 <div class="flex justify-between items-center">
                     <span class="text-xs text-gray-400">${formatDate(doc.uploadDate)}</span>
-                    <a href="/viewer/viewer.html?url=${encodeURIComponent(filePath)}" 
+                    <a href="${filePath}" 
                        target="_blank"
                        class="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
                        onclick="event.stopPropagation()">
@@ -83,7 +83,7 @@ function displayDocuments(documents) {
         `;
         
         card.addEventListener('click', () => {
-            window.open(`/viewer/viewer.html?url=${encodeURIComponent(filePath)}`, '_blank');
+            window.open(filePath, '_blank');
         });
         
         grid.appendChild(card);

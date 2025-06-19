@@ -10,7 +10,6 @@ from tkinter import filedialog, messagebox
 from tkcalendar import DateEntry
 import logging
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
@@ -27,19 +26,18 @@ class DocumentManager(ctk.CTk):
         self.current_file_path = None
         self.json_path = os.path.join("assets", "documents", "documents.json")
         self.files_dir = os.path.join("assets", "documents", "files")
+        self.html_dir = os.path.join("assets", "documents", "files")
         os.makedirs(self.files_dir, exist_ok=True)
+        os.makedirs(self.html_dir, exist_ok=True)
         ctk.set_appearance_mode("light")
         ctk.set_default_color_theme("blue")
-        logger.info("Initializing Document Manager application")
         self.setup_ui()
         self.load_data()
 
     def setup_ui(self):
-        # Main container
         self.main_frame = ctk.CTkFrame(self, fg_color="#F5F5F5", corner_radius=0)
         self.main_frame.pack(pady=0, padx=0, fill="both", expand=True)
 
-        # Header
         header_frame = ctk.CTkFrame(self.main_frame, fg_color="#1A1A1A", corner_radius=0)
         header_frame.pack(fill="x")
         title_label = ctk.CTkLabel(
@@ -63,11 +61,9 @@ class DocumentManager(ctk.CTk):
         )
         save_btn.pack(side="right", padx=20)
 
-        # Content area
         content_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         content_frame.pack(fill="both", expand=True, padx=30, pady=20)
 
-        # Left panel: Document List
         list_panel = ctk.CTkFrame(content_frame, fg_color="#FFFFFF", corner_radius=10, width=350)
         list_panel.pack(side="left", fill="y", padx=(0, 15))
         list_panel.pack_propagate(False)
@@ -97,7 +93,6 @@ class DocumentManager(ctk.CTk):
         self.listbox.pack(fill="both", expand=True, padx=15, pady=(0, 15))
         self.listbox.bind("<<ListboxSelect>>", self.on_select)
 
-        # Right panel: Document Details
         details_panel = ctk.CTkFrame(content_frame, fg_color="#FFFFFF", corner_radius=10)
         details_panel.pack(side="left", fill="both", expand=True)
 
@@ -112,7 +107,6 @@ class DocumentManager(ctk.CTk):
         )
         details_title.pack(fill="x")
 
-        # Form
         form_frame = ctk.CTkFrame(details_panel, fg_color="transparent")
         form_frame.pack(fill="both", padx=15, pady=10)
 
@@ -162,7 +156,6 @@ class DocumentManager(ctk.CTk):
         )
         self.btn_file.grid(row=len(fields), column=0, columnspan=2, pady=15, sticky="ew")
 
-        # Action buttons
         btn_frame = ctk.CTkFrame(details_panel, fg_color="transparent")
         btn_frame.pack(fill="x", padx=15, pady=10)
 
@@ -192,32 +185,36 @@ class DocumentManager(ctk.CTk):
         return f"#{darkened[0]:02x}{darkened[1]:02x}{darkened[2]:02x}"
 
     def load_data(self):
-        logger.info(f"Loading data from {self.json_path}")
         try:
             if os.path.exists(self.json_path):
                 with open(self.json_path, "r", encoding="utf-8") as f:
                     self.documents = json.load(f)
+                    for doc in self.documents:
+                        for file in os.listdir(self.files_dir):
+                            if os.path.splitext(file)[0] == doc['fileName']:
+                                doc['fileName'] = file
+                                break
                     self.documents.sort(key=lambda x: int(x["id"]))
-                    logger.info(f"Loaded {len(self.documents)} documents")
             else:
                 self.documents = []
-                logger.info("No existing JSON file found, starting with empty document list")
             self.update_list()
         except Exception as e:
-            logger.error(f"Failed to load JSON file: {str(e)}")
             messagebox.showerror("Lỗi", f"Không thể đọc file JSON:\n{str(e)}")
             self.documents = []
 
     def save_data(self):
-        logger.info(f"Saving data to {self.json_path}")
         try:
-            self.documents.sort(key=lambda x: int(x["id"]))
+            documents_to_save = []
+            for doc in self.documents:
+                doc_copy = doc.copy()
+                doc_copy['fileName'] = os.path.splitext(doc['fileName'])[0]
+                documents_to_save.append(doc_copy)
+            
+            documents_to_save.sort(key=lambda x: int(x["id"]))
             with open(self.json_path, "w", encoding="utf-8") as f:
-                json.dump(self.documents, f, indent=2, ensure_ascii=False)
-            logger.info("Data saved successfully")
+                json.dump(documents_to_save, f, indent=2, ensure_ascii=False)
             messagebox.showinfo("Thành công", "Đã lưu dữ liệu thành công!")
         except Exception as e:
-            logger.error(f"Failed to save file: {str(e)}")
             messagebox.showerror("Lỗi", f"Không thể lưu file:\n{str(e)}")
 
     def update_list(self):
@@ -231,7 +228,6 @@ class DocumentManager(ctk.CTk):
             return
         index = selection[0]
         doc = self.documents[index]
-        logger.info(f"Selected document: {doc['id']} - {doc['displayName']}")
         self.inputs["id"].delete(0, tk.END)
         self.inputs["id"].insert(0, doc.get("id", ""))
         self.inputs["displayName"].delete(0, tk.END)
@@ -247,6 +243,7 @@ class DocumentManager(ctk.CTk):
             date = datetime.strptime(date_str, "%Y-%m-%d")
             self.inputs["uploadDate"].set_date(date)
         self.inputs["fileName"].configure(text=doc.get("fileName", "Chưa có file"))
+        self.current_file_path = None
 
     def select_file(self):
         file_path = filedialog.askopenfilename(
@@ -254,14 +251,29 @@ class DocumentManager(ctk.CTk):
             filetypes=[
                 ("All Files", "*.*"),
                 ("PDF Files", "*.pdf"),
-                ("Word Documents", "*.docx"),
-                ("Excel Files", "*.xlsx")
+                ("Word Documents", "*.doc;*.docx"),
+                ("Excel Files", "*.xls;*.xlsx"),
+                ("Image Files", "*.png;*.jpg;*.jpeg"),
+                ("Text Files", "*.txt")
             ]
         )
         if file_path:
             self.current_file_path = file_path
             self.inputs["fileName"].configure(text=os.path.basename(file_path))
-            logger.info(f"Selected file: {file_path}")
+            file_ext = os.path.splitext(file_path)[1].lower()
+            suggested_type = {
+                '.pdf': 'PDF Document',
+                '.doc': 'Word Document',
+                '.docx': 'Word Document',
+                '.xls': 'Excel Spreadsheet',
+                '.xlsx': 'Excel Spreadsheet',
+                '.png': 'Image',
+                '.jpg': 'Image',
+                '.jpeg': 'Image',
+                '.txt': 'Text Document'
+            }.get(file_ext, 'Unknown')
+            self.inputs["type"].delete(0, tk.END)
+            self.inputs["type"].insert(0, suggested_type)
 
     def generate_id(self):
         if not self.documents:
@@ -274,16 +286,59 @@ class DocumentManager(ctk.CTk):
         random_str = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
         return f"{random_str}{ext}"
 
+    def create_html_for_document(self, doc):
+        html_content = f"""<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A3 Chuyên Tin - Tài Liệu {doc['id']}: {doc['displayName']}</title>
+    <meta name="description" content="{doc['description']}">
+    <meta name="keywords" content="{', '.join(doc['tags'])}, A3 Chuyên Tin, tài liệu học tập">
+    <meta name="author" content="A3 Chuyên Tin">
+    <meta property="og:title" content="A3 Chuyên Tin - Tài Liệu {doc['id']}: {doc['displayName']}">
+    <meta property="og:description" content="{doc['description']}">
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="{doc['uploadDate']}">
+    <meta property="article:tag" content="{', '.join(doc['tags'])}">
+    <style>
+        html, body {{
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }}
+        .file-viewer {{
+            width: 100%;
+            height: 100vh;
+            border: none;
+            display: block;
+        }}
+    </style>
+</head>
+<body>
+    <iframe class="file-viewer" src="../files/{doc['fileName']}"></iframe>
+</body>
+</html>"""
+        
+        html_filename = f"{os.path.splitext(doc['fileName'])[0]}.html"
+        html_path = os.path.join(self.html_dir, html_filename)
+        
+        with open(html_path, "w", encoding="utf-8") as f:
+            f.write(html_content)
+
     def add_document(self):
         if not self.current_file_path:
-            logger.warning("Attempted to add document without selecting a file")
             messagebox.showwarning("Cảnh báo", "Vui lòng chọn file đính kèm")
             return
+        
         new_id = self.generate_id()
         original_name = os.path.basename(self.current_file_path)
         new_filename = self.generate_random_filename(original_name)
         dest_path = os.path.join(self.files_dir, new_filename)
         shutil.copy(self.current_file_path, dest_path)
+        
         upload_date = self.inputs["uploadDate"].get_date().strftime("%Y-%m-%d")
         new_doc = {
             "id": new_id,
@@ -294,21 +349,28 @@ class DocumentManager(ctk.CTk):
             "uploadDate": upload_date,
             "tags": [tag.strip() for tag in self.inputs["tags"].get().split(",") if tag.strip()]
         }
+        
         self.documents.append(new_doc)
+        self.create_html_for_document(new_doc)
+        
         self.update_list()
         self.clear_form()
-        logger.info(f"Added new document: {new_id} - {new_doc['displayName']}")
+        self.save_data()
         messagebox.showinfo("Thành công", "Đã thêm tài liệu mới!")
 
     def update_document(self):
         selection = self.listbox.curselection()
         if not selection:
-            logger.warning("Attempted to update document without selection")
             messagebox.showwarning("Cảnh báo", "Vui lòng chọn tài liệu để cập nhật")
             return
+        
         index = selection[0]
         doc = self.documents[index]
         upload_date = self.inputs["uploadDate"].get_date().strftime("%Y-%m-%d")
+        
+        old_filename = doc["fileName"]
+        old_html_path = os.path.join(self.html_dir, f"{os.path.splitext(doc['fileName'])[0]}.html")
+        
         doc.update({
             "displayName": self.inputs["displayName"].get(),
             "type": self.inputs["type"].get(),
@@ -316,34 +378,49 @@ class DocumentManager(ctk.CTk):
             "uploadDate": upload_date,
             "tags": [tag.strip() for tag in self.inputs["tags"].get().split(",") if tag.strip()]
         })
+        
         if self.current_file_path:
             original_name = os.path.basename(self.current_file_path)
             new_filename = self.generate_random_filename(original_name)
             dest_path = os.path.join(self.files_dir, new_filename)
             shutil.copy(self.current_file_path, dest_path)
-            old_file = os.path.join(self.files_dir, doc["fileName"])
+            
+            old_file = os.path.join(self.files_dir, old_filename)
             if os.path.exists(old_file):
                 os.remove(old_file)
+            
             doc["fileName"] = new_filename
+        
+        if os.path.exists(old_html_path):
+            os.remove(old_html_path)
+        self.create_html_for_document(doc)
+        
         self.update_list()
-        logger.info(f"Updated document: {doc['id']} - {doc['displayName']}")
+        self.clear_form()
+        self.save_data()
         messagebox.showinfo("Thành công", "Đã cập nhật tài liệu!")
 
     def delete_document(self):
         selection = self.listbox.curselection()
         if not selection:
-            logger.warning("Attempted to delete document without selection")
             messagebox.showwarning("Cảnh báo", "Vui lòng chọn tài liệu để xóa")
             return
+        
         if messagebox.askyesno("Xác nhận", "Bạn có chắc chắn muốn xóa tài liệu này?"):
             index = selection[0]
             doc = self.documents.pop(index)
+            
             file_path = os.path.join(self.files_dir, doc["fileName"])
             if os.path.exists(file_path):
                 os.remove(file_path)
+            
+            html_path = os.path.join(self.html_dir, f"{os.path.splitext(doc['fileName'])[0]}.html")
+            if os.path.exists(html_path):
+                os.remove(html_path)
+            
             self.update_list()
             self.clear_form()
-            logger.info(f"Deleted document: {doc['id']} - {doc['displayName']}")
+            self.save_data()
             messagebox.showinfo("Thành công", "Đã xóa tài liệu!")
 
     def clear_form(self):
@@ -355,7 +432,6 @@ class DocumentManager(ctk.CTk):
             elif isinstance(widget, ctk.CTkLabel):
                 widget.configure(text="Chưa có file")
         self.current_file_path = None
-        logger.info("Cleared form inputs")
 
 if __name__ == "__main__":
     app = DocumentManager()
