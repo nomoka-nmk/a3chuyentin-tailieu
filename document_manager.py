@@ -262,16 +262,16 @@ class DocumentManager(ctk.CTk):
             self.inputs["fileName"].configure(text=os.path.basename(file_path))
             file_ext = os.path.splitext(file_path)[1].lower()
             suggested_type = {
-                '.pdf': 'PDF Document',
-                '.doc': 'Word Document',
-                '.docx': 'Word Document',
-                '.xls': 'Excel Spreadsheet',
-                '.xlsx': 'Excel Spreadsheet',
-                '.png': 'Image',
-                '.jpg': 'Image',
-                '.jpeg': 'Image',
-                '.txt': 'Text Document'
-            }.get(file_ext, 'Unknown')
+                '.pdf': 'application/pdf',
+                '.doc': 'application/msword',
+                '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                '.xls': 'application/vnd.ms-excel',
+                '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                '.png': 'image/png',
+                '.jpg': 'image/jpeg',
+                '.jpeg': 'image/jpeg',
+                '.txt': 'text/plain'
+            }.get(file_ext, 'application/octet-stream')
             self.inputs["type"].delete(0, tk.END)
             self.inputs["type"].insert(0, suggested_type)
 
