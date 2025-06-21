@@ -318,7 +318,7 @@ class DocumentManager(ctk.CTk):
     </style>
 </head>
 <body>
-    <iframe class="file-viewer" src="../files/{doc['fileName']}"></iframe>
+    <iframe class="file-viewer" src="https://chuyentin-tailieu.a3sachhonaba.com/viewer/pdf/web/viewer.html?file=../files/{doc['fileName']}"></iframe>
 </body>
 </html>"""
         
