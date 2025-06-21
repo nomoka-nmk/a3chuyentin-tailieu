@@ -292,7 +292,6 @@ class DocumentManager(ctk.CTk):
 
     def create_html_for_document(self, doc):
         file_ext = os.path.splitext(doc['fileName'])[1].lower()
-        file_url = f"https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/{doc['fileName']}"
         
         if file_ext == '.pdf':
             content = f"""<iframe class="file-viewer" src="https://chuyentin-tailieu.a3sachhonaba.com/viewer/pdf/web/viewer.html?file={file_url}"></iframe>"""
@@ -309,68 +308,70 @@ class DocumentManager(ctk.CTk):
                 <a href="{file_url}" download class="download-btn">Tải file về.</a>
             </div>"""
 
+        download_filename = f"{doc['displayName']}{file_ext}"
+
         html_content = f"""<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{doc['displayName']}</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <meta name="description" content="{doc['description']}">
-    <meta name="keywords" content="{', '.join(doc['tags'])}, A3 Chuyên Tin, tài liệu học tập">
-    <meta name="author" content="A3 Chuyên Tin">
-    <meta property="og:title" content="A3 Chuyên Tin - Tài Liệu {doc['id']}: {doc['displayName']}">
-    <meta property="og:description" content="{doc['description']}">
-    <meta property="og:type" content="article">
-    <meta property="article:published_time" content="{doc['uploadDate']}">
-    <meta property="article:tag" content="{', '.join(doc['tags'])}">
-    <style>
-        html, body {{
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-        }}
-        .file-viewer {{
-            width: 100%;
-            height: 100vh;
-            border: none;
-            display: block;
-            object-fit: contain;
-        }}
-        .download-container {{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-        }}
-        .download-btn {{
-            display: inline-block;
-            padding: 15px 30px;
-            background-color: #1A1A1A;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 18px;
-            margin-top: 20px;
-        }}
-        .download-btn:hover {{
-            background-color: #333;
-        }}
-    </style>
-</head>
-<body>
-    <div class="w-full h-screen flex flex-col items-center justify-center" style="background-color: #2a2a2e;">
-        {content}
-        <a class="inline-block text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-lg transition-colors duration-300" href="https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/{doc['fileName']}">Tải về</a>
-    </div>    
-</body>
-</html>"""
+    <html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{doc['displayName']}</title>
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <meta name="description" content="{doc['description']}">
+        <meta name="keywords" content="{', '.join(doc['tags'])}, A3 Chuyên Tin, tài liệu học tập">
+        <meta name="author" content="A3 Chuyên Tin">
+        <meta property="og:title" content="A3 Chuyên Tin - Tài Liệu {doc['id']}: {doc['displayName']}">
+        <meta property="og:description" content="{doc['description']}">
+        <meta property="og:type" content="article">
+        <meta property="article:published_time" content="{doc['uploadDate']}">
+        <meta property="article:tag" content="{', '.join(doc['tags'])}">
+        <style>
+            html, body {{
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                font-family: Arial, sans-serif;
+            }}
+            .file-viewer {{
+                width: 100%;
+                height: 100vh;
+                border: none;
+                display: block;
+                object-fit: contain;
+            }}
+            .download-container {{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                text-align: center;
+            }}
+            .download-btn {{
+                display: inline-block;
+                padding: 15px 30px;
+                background-color: #1A1A1A;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                font-size: 18px;
+                margin-top: 20px;
+            }}
+            .download-btn:hover {{
+                background-color: #333;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="w-full h-screen flex flex-col items-center justify-center" style="background-color: #2a2a2e;">
+            {content}
+            <a href="javascript:void(0)" onclick="fetch('{doc['fileName']}').then(response => response.blob()).then(blob => {{ const url = window.URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = '{download_filename}'; document.body.appendChild(link); link.click(); document.body.removeChild(link); window.URL.revokeObjectURL(url); }}).catch(() => alert('Không thể tải tệp!'));" class="inline-flex items-center text-white bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded-lg transition-colors duration-300"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>Tải về</a>
+        </div>    
+    </body>
+    </html>"""
         
         html_filename = f"{os.path.splitext(doc['fileName'])[0]}.html"
         html_path = os.path.join(self.html_dir, html_filename)
