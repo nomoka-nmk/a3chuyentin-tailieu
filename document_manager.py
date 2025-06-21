@@ -292,9 +292,9 @@ class DocumentManager(ctk.CTk):
 
     def create_html_for_document(self, doc):
         file_ext = os.path.splitext(doc['fileName'])[1].lower()
-        
-        file_url = "https://chuyentin-tailieu.a3sachhonaba.com/assets/files/" "doc['fileName']"
 
+        file_url = f"https://chuyentin-tailieu.a3sachhonaba.com/assets/files/{doc['fileName']}"
+        
         if file_ext == '.pdf':
             content = f"""<iframe class="file-viewer" src="https://chuyentin-tailieu.a3sachhonaba.com/viewer/pdf/web/viewer.html?file={file_url}"></iframe>"""
         elif file_ext in ('.png', '.jpg', '.jpeg', '.webp'):
@@ -302,12 +302,10 @@ class DocumentManager(ctk.CTk):
         elif file_ext in ('.mp4', '.avi', '.mkv', '.webm'):
             content = f"""<video class="file-viewer" controls>
                 <source src="{file_url}" type="{doc['type']}">
-                Trình duyệt của bạn không hỗ trợ file này!
+                {file_url}
             </video>"""
         else:
             content = f""""""
-
-        download_filename = f"{doc['displayName']}{file_ext}"
 
         html_content = f"""<!DOCTYPE html>
     <html lang="vi">
@@ -338,7 +336,7 @@ class DocumentManager(ctk.CTk):
     <body>
         <div class="w-full h-screen flex flex-col items-center justify-center" style="background-color: #2a2a2e;">
             {content}
-            <a href="javascript:void(0)" onclick="fetch('{doc['fileName']}').then(response => response.blob()).then(blob => {{ const url = window.URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = '{download_filename}'; document.body.appendChild(link); link.click(); document.body.removeChild(link); window.URL.revokeObjectURL(url); }}).catch(() => alert('Không thể tải tệp!'));" class="inline-flex items-center text-white bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded-lg transition-colors duration-300"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>Tải về</a>
+            <a href="{doc['fileName']}" class="inline-flex items-center text-white bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded-lg transition-colors duration-300">Tải về</a>
         </div>    
     </body>
     </html>"""
