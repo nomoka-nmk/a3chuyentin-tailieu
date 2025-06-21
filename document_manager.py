@@ -319,7 +319,7 @@ class DocumentManager(ctk.CTk):
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <meta name="description" content="{doc['description']}">
-        <meta name="keywords" content="{', '.join(doc['tags'])}, A3 Chuyên Tin, tài liệu học tập">
+        <meta name="keywords" content="{', '.join(doc['tags'])}, THPT Chuyên Nguyễn Thị Minh Khai, A3 Chuyên Tin, A3 Sạch Hơn Aba, Chuyên Tin Học, NTMK, THPT, Tài Liệu Học Tập, Giáo Viên, Học Sinh">
         <meta name="author" content="A3 Chuyên Tin">
         <meta property="og:title" content="A3 Chuyên Tin - Tài Liệu {doc['id']}: {doc['displayName']}">
         <meta property="og:description" content="{doc['description']}">
