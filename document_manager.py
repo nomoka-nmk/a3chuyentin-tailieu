@@ -293,6 +293,8 @@ class DocumentManager(ctk.CTk):
     def create_html_for_document(self, doc):
         file_ext = os.path.splitext(doc['fileName'])[1].lower()
         
+        file_url = "https://chuyentin-tailieu.a3sachhonaba.com/assets/files/" "doc['fileName']"
+
         if file_ext == '.pdf':
             content = f"""<iframe class="file-viewer" src="https://chuyentin-tailieu.a3sachhonaba.com/viewer/pdf/web/viewer.html?file={file_url}"></iframe>"""
         elif file_ext in ('.png', '.jpg', '.jpeg', '.webp'):
@@ -303,10 +305,7 @@ class DocumentManager(ctk.CTk):
                 Trình duyệt của bạn không hỗ trợ file này!
             </video>"""
         else:
-            content = f"""<div class="download-container">
-                <p>File: {doc['displayName']}</p>
-                <a href="{file_url}" download class="download-btn">Tải file về.</a>
-            </div>"""
+            content = f""""""
 
         download_filename = f"{doc['displayName']}{file_ext}"
 
@@ -327,41 +326,12 @@ class DocumentManager(ctk.CTk):
         <meta property="article:published_time" content="{doc['uploadDate']}">
         <meta property="article:tag" content="{', '.join(doc['tags'])}">
         <style>
-            html, body {{
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                height: 100%;
-                overflow: hidden;
-                font-family: Arial, sans-serif;
-            }}
             .file-viewer {{
                 width: 100%;
                 height: 100vh;
                 border: none;
                 display: block;
                 object-fit: contain;
-            }}
-            .download-container {{
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                height: 100vh;
-                text-align: center;
-            }}
-            .download-btn {{
-                display: inline-block;
-                padding: 15px 30px;
-                background-color: #1A1A1A;
-                color: white;
-                text-decoration: none;
-                border-radius: 5px;
-                font-size: 18px;
-                margin-top: 20px;
-            }}
-            .download-btn:hover {{
-                background-color: #333;
             }}
         </style>
     </head>
