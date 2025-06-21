@@ -254,6 +254,7 @@ class DocumentManager(ctk.CTk):
                 ("Word Documents", "*.doc;*.docx"),
                 ("Excel Files", "*.xls;*.xlsx"),
                 ("Image Files", "*.png;*.jpg;*.jpeg"),
+                ("Video Files", "*.mp4;*.avi;*.mkv"),
                 ("Text Files", "*.txt")
             ]
         )
@@ -270,6 +271,9 @@ class DocumentManager(ctk.CTk):
                 '.png': 'image/png',
                 '.jpg': 'image/jpeg',
                 '.jpeg': 'image/jpeg',
+                '.mp4': 'video/mp4',
+                '.avi': 'video/x-msvideo',
+                '.mkv': 'video/x-matroska',
                 '.txt': 'text/plain'
             }.get(file_ext, 'application/octet-stream')
             self.inputs["type"].delete(0, tk.END)
@@ -287,6 +291,24 @@ class DocumentManager(ctk.CTk):
         return f"{random_str}{ext}"
 
     def create_html_for_document(self, doc):
+        file_ext = os.path.splitext(doc['fileName'])[1].lower()
+        file_url = f"https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/{doc['fileName']}"
+        
+        if file_ext == '.pdf':
+            content = f"""<iframe class="file-viewer" src="https://chuyentin-tailieu.a3sachhonaba.com/viewer/pdf/web/viewer.html?file={file_url}"></iframe>"""
+        elif file_ext in ('.png', '.jpg', '.jpeg', '.webp'):
+            content = f"""<img src="{file_url}" class="file-viewer" alt="{doc['displayName']}">"""
+        elif file_ext in ('.mp4', '.avi', '.mkv', '.webm'):
+            content = f"""<video class="file-viewer" controls>
+                <source src="{file_url}" type="{doc['type']}">
+                Trình duyệt của bạn không hỗ trợ file này!
+            </video>"""
+        else:
+            content = f"""<div class="download-container">
+                <p>File: {doc['displayName']}</p>
+                <a href="{file_url}" download class="download-btn">Tải file về.</a>
+            </div>"""
+
         html_content = f"""<!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -308,17 +330,40 @@ class DocumentManager(ctk.CTk):
             width: 100%;
             height: 100%;
             overflow: hidden;
+            font-family: Arial, sans-serif;
         }}
         .file-viewer {{
             width: 100%;
             height: 100vh;
             border: none;
             display: block;
+            object-fit: contain;
+        }}
+        .download-container {{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }}
+        .download-btn {{
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #1A1A1A;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            margin-top: 20px;
+        }}
+        .download-btn:hover {{
+            background-color: #333;
         }}
     </style>
 </head>
 <body>
-    <iframe class="file-viewer" src="https://chuyentin-tailieu.a3sachhonaba.com/viewer/pdf/web/viewer.html?file=../files/{doc['fileName']}"></iframe>
+    {content}
 </body>
 </html>"""
         
