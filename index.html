@@ -326,7 +326,7 @@
                 return;
             }
             
-            documents.forEach((doc, index) => {
+            documents.sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate)).forEach((doc, index) => {
                 const icon = getFileIcon(doc.type);
                 const colors = getFileTypeColors(doc.type);
                 const filePath = `https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/${doc.fileName}.html`;
@@ -335,7 +335,7 @@
                 card.className = 'document-card bg-white dark:bg-[#111111] rounded-xl overflow-hidden shadow-md dark:shadow-none border border-gray-100 dark:border-gray-800';
                 card.dataset.id = doc.id;
                 card.style.animationDelay = `${index * 0.05}s`;
-                
+
                 card.innerHTML = `
                     <div class="document-card-content p-6">
                         <div class="flex items-start mb-4">
