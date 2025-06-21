@@ -7,34 +7,442 @@
     <title>A3 Chuyên Tin - Tài Liệu</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="./assets/css/styles.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        body {
+            transition: background-color 0.3s ease;
+        }
+        
+        .header-card {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .document-card {
+            transition: all 0.3s ease;
+            animation: slideUp 0.4s ease-out;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .document-card-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .document-card-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+
+        .document-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .document-card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .file-type-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+        }
+        
+        .dark {
+            background-color: #000000 !important;
+            color-scheme: dark;
+        }
+        
+        .dark .header-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        }
+        
+        .dark .bg-white {
+            background-color: #111111 !important;
+        }
+        
+        .dark .bg-gray-50 {
+            background-color: #000000 !important;
+        }
+        
+        .dark .bg-gray-700 {
+            background-color: #111111 !important;
+        }
+        
+        .dark .text-gray-800 {
+            color: #ffffff !important;
+        }
+        
+        .dark .text-gray-600 {
+            color: #e5e7eb !important;
+        }
+        
+        .dark .text-gray-400 {
+            color: #d1d5db !important;
+        }
+        
+        .dark .border-gray-600 {
+            border-color: #333333 !important;
+        }
+        
+        .search-container {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        footer {
+            animation: slideUp 0.8s ease-out;
+        }
+        
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans">
-    <div id="header-container"></div>
-    <main class="container mx-auto px-4 py-8">
-        <section class="mb-12">
-            <div class="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-md border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Tìm kiếm tài liệu</h2>
+<body class="min-h-screen flex flex-col font-['Inter'] bg-gray-50 dark:bg-black">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex justify-between items-center mb-4">
+            <div></div>
+            <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                <i class="fas fa-moon dark:hidden"></i>
+                <i class="fas fa-sun hidden dark:block"></i>
+            </button>
+        </div>
+        
+        <header class="header-card text-white">
+            <div class="p-6 text-center">
+                <h1 class="text-2xl md:text-3xl font-bold mb-2">A3 Chuyên Tin</h1>
+                <p class="text-blue-100 dark:text-blue-200 text-sm md:text-base">Kho tài liệu học tập chuyên Tin</p>
+            </div>
+        </header>
+    </div>
+
+    <main class="flex-grow container mx-auto px-4 py-6 bg-transparent">
+        <section class="mb-8 search-container">
+            <div class="bg-white dark:bg-[#111111] rounded-xl shadow-md p-6 max-w-4xl mx-auto border border-gray-100 dark:border-gray-800">
+                <div class="text-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-2 flex items-center justify-center">
+                        <i class="fas fa-search text-blue-500 mr-2"></i>
+                        Tìm kiếm tài liệu
+                    </h2>
+                </div>
                 <div class="relative">
+                    <input type="text" id="search-input" placeholder="Nhập từ khóa (tên tài liệu, mô tả...)" 
+                        class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white dark:bg-gray-700 dark:text-white transition-all duration-300">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fas fa-search text-gray-400"></i>
                     </div>
-                    <input type="text" id="search-input" placeholder="Nhập từ khóa để tìm kiếm..." 
-                        class="w-full pl-10 pr-6 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm transition-all duration-300 hover:border-gray-300">
                 </div>
             </div>
         </section>
+
         <section>
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Tất cả tài liệu</h2>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800 dark:text-white" id="documents-title">
+                    <i class="fas fa-book-open text-blue-500 mr-2"></i>
+                    Danh sách tài liệu
+                </h2>
+            </div>
+            
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="documents-grid">
             </div>
         </section>
     </main>
-    <div id="footer-container"></div>
+
+    <footer class="mt-auto text-white py-6">
+        <div class="container mx-auto px-4">
+            <div class="bg-gray-700 dark:bg-[#111111] rounded-lg shadow-lg p-6 transition-all duration-500">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center md:text-left">
+                        <h3 class="text-lg font-bold mb-3 dark:text-white">
+                            <i class="fas fa-archive text-blue-300 mr-2"></i>
+                            A3 Chuyên Tin
+                        </h3>
+                        <p class="text-gray-400 dark:text-gray-300 text-sm">Nơi lưu trữ tài liệu học tập chất lượng</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <h3 class="text-lg font-bold mb-3 dark:text-white">
+                            <i class="fas fa-external-link-alt text-blue-300 mr-2"></i>
+                            Liên kết
+                        </h3>
+                        <ul class="space-y-2">
+                            <li><a href="https://a3sachhonaba.com/" class="text-gray-400 dark:text-gray-300 hover:text-white transition-colors text-sm">
+                                Trang chủ A3
+                            </a></li>
+                            <li><a href="https://chuyentin.a3sachhonaba.com/" class="text-gray-400 dark:text-gray-300 hover:text-white transition-colors text-sm">
+                                Chuyên Tin
+                            </a></li>
+                            <li><a href="http://chuyenminhkhaist.edu.vn/" class="text-gray-400 dark:text-gray-300 hover:text-white transition-colors text-sm">
+                                THPT Chuyên NTMK
+                            </a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="text-center">
+                        <h3 class="text-lg font-bold mb-3 dark:text-white">
+                            <i class="fas fa-info-circle text-blue-300 mr-2"></i>
+                            Thông tin
+                        </h3>
+                        <p class="text-gray-400 dark:text-gray-300 text-sm">Hệ thống quản lý tài liệu nội bộ</p>
+                        <p class="text-gray-400 dark:text-gray-300 text-sm mt-2">Phiên bản 1.0</p>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-600 dark:border-gray-800 mt-6 pt-4 text-center text-gray-400 dark:text-gray-300 text-sm transition-colors">
+                    <p>© 2025 A3 Chuyên Tin. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <div id="loading-spinner" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
     </div>
-    <script src="./assets/js/main.js"></script>
-    <script src="./assets/js/search.js"></script>
+
+    <script>
+        function initDarkMode() {
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+            }
+            
+            darkModeToggle.addEventListener('click', () => {
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('darkMode', isDark);
+            });
+        }
+
+        let allDocuments = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initDarkMode();
+            loadDocuments().then(docs => {
+                allDocuments = docs;
+                setupSearch();
+            });
+        });
+
+        function setupSearch() {
+            const searchInput = document.getElementById('search-input');
+            
+            searchInput.addEventListener('input', function() {
+                performDynamicSearch(this.value.trim());
+            });
+            
+            searchInput.focus();
+        }
+
+        function performDynamicSearch(query) {
+            if (!query) {
+                displayDocuments(allDocuments);
+                updateSearchTitle('Tất cả tài liệu');
+                return;
+            }
+
+            const normalizedQuery = query.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const results = allDocuments.filter(doc => {
+                const searchFields = [
+                    doc.displayName,
+                    doc.description,
+                    ...(doc.tags || [])
+                ];
+                
+                return searchFields.some(field => 
+                    field && field.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(normalizedQuery)
+                );
+            });
+
+            displayDocuments(results);
+            updateSearchTitle(`Kết quả tìm kiếm: "${query}"`);
+        }
+
+        async function loadDocuments() {
+            const spinner = document.getElementById('loading-spinner');
+            spinner.classList.remove('hidden');
+            
+            try {
+                const response = await fetch('./assets/documents/documents.json');
+                const documents = await response.json();
+                displayDocuments(documents);
+                return documents;
+            } catch (error) {
+                console.error('Error loading documents:', error);
+                document.getElementById('documents-grid').innerHTML = `
+                    <div class="col-span-full text-center py-8">
+                        <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+                        <p class="text-xl text-gray-700 dark:text-gray-300">Không thể tải tài liệu. Vui lòng thử lại sau.</p>
+                    </div>
+                `;
+                return [];
+            } finally {
+                spinner.classList.add('hidden');
+            }
+        }
+
+        function displayDocuments(documents) {
+            const grid = document.getElementById('documents-grid');
+            grid.innerHTML = '';
+            
+            if (documents.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-folder-open text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                        <p class="text-xl text-gray-600 dark:text-gray-300 mb-2">Không tìm thấy tài liệu phù hợp</p>
+                        <p class="text-gray-500 dark:text-gray-400">Thử với từ khóa tìm kiếm khác</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            documents.forEach((doc, index) => {
+                const icon = getFileIcon(doc.type);
+                const colors = getFileTypeColors(doc.type);
+                const filePath = `https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/${doc.fileName}.html`;
+
+                const card = document.createElement('div');
+                card.className = 'document-card bg-white dark:bg-[#111111] rounded-xl overflow-hidden shadow-md dark:shadow-none border border-gray-100 dark:border-gray-800';
+                card.dataset.id = doc.id;
+                card.style.animationDelay = `${index * 0.05}s`;
+                
+                card.innerHTML = `
+                    <div class="document-card-content p-6">
+                        <div class="flex items-start mb-4">
+                            <div class="file-type-badge ${colors.bg} ${colors.text} shadow-sm">
+                                <i class="${icon} text-xl"></i>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 line-clamp-1">${doc.displayName}</h3>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-xs font-medium px-2 py-1 rounded-full ${colors.bg} ${colors.text}">
+                                        ${formatFileType(doc.type)}
+                                    </span>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400 ml-2">
+                                        ${formatDate(doc.uploadDate)}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 mb-4">${doc.description || 'Không có mô tả'}</p>
+                        <div class="document-card-footer">
+                            <div class="flex justify-end">
+                                <a href="${filePath}" 
+                                target="_blank"
+                                class="inline-flex items-center px-4 py-2 bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-200 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors">
+                                    Mở tài liệu <i class="fas fa-external-link-alt ml-2 text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    window.open(filePath, '_blank');
+                });
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function getFileIcon(fileType) {
+            const type = fileType.split('/')[0];
+            switch(type) {
+                case 'application':
+                    if (fileType.includes('pdf')) return 'fas fa-file-pdf';
+                    if (fileType.includes('word') || fileType.includes('msword')) return 'fas fa-file-word';
+                    if (fileType.includes('excel') || fileType.includes('spreadsheet')) return 'fas fa-file-excel';
+                    if (fileType.includes('powerpoint') || fileType.includes('presentation')) return 'fas fa-file-powerpoint';
+                    if (fileType.includes('zip') || fileType.includes('compressed')) return 'fas fa-file-archive';
+                    return 'fas fa-file-alt';
+                case 'text':
+                    return 'fas fa-file-alt';
+                case 'image':
+                    return 'fas fa-file-image';
+                default:
+                    return 'fas fa-file';
+            }
+        }
+
+        function getFileTypeColors(fileType) {
+            const type = fileType.split('/')[0];
+            switch(type) {
+                case 'application':
+                    if (fileType.includes('pdf')) return { bg: 'bg-red-100 dark:bg-red-900', text: 'text-red-600 dark:text-red-200' };
+                    if (fileType.includes('word') || fileType.includes('msword')) return { bg: 'bg-blue-100 dark:bg-blue-900', text: 'text-blue-600 dark:text-blue-200' };
+                    if (fileType.includes('excel') || fileType.includes('spreadsheet')) return { bg: 'bg-green-100 dark:bg-green-900', text: 'text-green-600 dark:text-green-200' };
+                    if (fileType.includes('powerpoint') || fileType.includes('presentation')) return { bg: 'bg-orange-100 dark:bg-orange-900', text: 'text-orange-600 dark:text-orange-200' };
+                    if (fileType.includes('zip') || fileType.includes('compressed')) return { bg: 'bg-purple-100 dark:bg-purple-900', text: 'text-purple-600 dark:text-purple-200' };
+                    return { bg: 'bg-gray-100 dark:bg-gray-700', text: 'text-gray-600 dark:text-gray-200' };
+                case 'text':
+                    return { bg: 'bg-gray-100 dark:bg-gray-700', text: 'text-gray-600 dark:text-gray-200' };
+                case 'image':
+                    return { bg: 'bg-pink-100 dark:bg-pink-900', text: 'text-pink-600 dark:text-pink-200' };
+                default:
+                    return { bg: 'bg-gray-100 dark:bg-gray-700', text: 'text-gray-600 dark:text-gray-200' };
+            }
+        }
+
+        function formatFileType(fileType) {
+            const type = fileType.split('/')[0];
+            switch(type) {
+                case 'application':
+                    if (fileType.includes('pdf')) return 'PDF';
+                    if (fileType.includes('word') || fileType.includes('msword')) return 'Word';
+                    if (fileType.includes('excel') || fileType.includes('spreadsheet')) return 'Excel';
+                    if (fileType.includes('powerpoint') || fileType.includes('presentation')) return 'PowerPoint';
+                    if (fileType.includes('zip') || fileType.includes('compressed')) return 'Tệp nén';
+                    return 'Tài liệu';
+                case 'text':
+                    return 'Văn bản';
+                case 'image':
+                    return 'Hình ảnh';
+                default:
+                    return 'Tệp';
+            }
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('vi-VN', options);
+        }
+
+        function updateSearchTitle(title) {
+            const titleElement = document.getElementById('documents-title');
+            if (titleElement) {
+                titleElement.innerHTML = `<i class="fas fa-book-open text-blue-500 mr-2"></i>${title}`;
+            }
+        }
+    </script>
 </body>
 </html>
