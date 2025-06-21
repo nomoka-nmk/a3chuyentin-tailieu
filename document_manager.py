@@ -315,6 +315,8 @@ class DocumentManager(ctk.CTk):
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{doc['displayName']}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta name="description" content="{doc['description']}">
     <meta name="keywords" content="{', '.join(doc['tags'])}, A3 Chuyên Tin, tài liệu học tập">
     <meta name="author" content="A3 Chuyên Tin">
@@ -363,7 +365,10 @@ class DocumentManager(ctk.CTk):
     </style>
 </head>
 <body>
-    {content}
+    <div class="w-full h-screen flex flex-col items-center justify-center" style="background-color: #2a2a2e;">
+        {content}
+        <a class="inline-block text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-lg transition-colors duration-300" href="https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/{doc['fileName']}">Tải về</a>
+    </div>    
 </body>
 </html>"""
         
