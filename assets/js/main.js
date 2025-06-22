@@ -123,15 +123,6 @@ function displayDocuments(documents) {
                     </div>
                 </div>
                 <p class="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 mb-4">${doc.description || 'Không có mô tả'}</p>
-                <div class="document-card-footer">
-                    <div class="flex justify-end">
-                        <a href="${filePath}" 
-                        target="_blank"
-                        class="inline-flex items-center px-4 py-2 bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-200 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors">
-                            Mở tài liệu <i class="fas fa-external-link-alt ml-2 text-sm"></i>
-                        </a>
-                    </div>
-                </div>
             </div>
         `;
         
