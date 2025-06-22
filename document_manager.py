@@ -26,9 +26,7 @@ class DocumentManager(ctk.CTk):
         self.current_file_path = None
         self.json_path = os.path.join("assets", "documents", "documents.json")
         self.files_dir = os.path.join("assets", "documents", "files")
-        self.html_dir = os.path.join("assets", "documents", "files")
         os.makedirs(self.files_dir, exist_ok=True)
-        os.makedirs(self.html_dir, exist_ok=True)
         ctk.set_appearance_mode("light")
         ctk.set_default_color_theme("blue")
         self.setup_ui()
@@ -112,6 +110,7 @@ class DocumentManager(ctk.CTk):
 
         self.inputs = {
             "id": ctk.CTkEntry(form_frame, font=("Georgia", 14), fg_color="#F0F0F0", border_color="#1A1A1A", text_color="#1A1A1A"),
+            "name": ctk.CTkEntry(form_frame, font=("Georgia", 14), fg_color="#F0F0F0", border_color="#1A1A1A", text_color="#1A1A1A"),
             "displayName": ctk.CTkEntry(form_frame, font=("Georgia", 14), fg_color="#F0F0F0", border_color="#1A1A1A", text_color="#1A1A1A"),
             "type": ctk.CTkEntry(form_frame, font=("Georgia", 14), fg_color="#F0F0F0", border_color="#1A1A1A", text_color="#1A1A1A"),
             "description": ctk.CTkEntry(form_frame, font=("Georgia", 14), fg_color="#F0F0F0", border_color="#1A1A1A", text_color="#1A1A1A"),
@@ -131,6 +130,7 @@ class DocumentManager(ctk.CTk):
 
         fields = [
             ("Mã tài liệu:", self.inputs["id"]),
+            ("Tên file (không đuôi):", self.inputs["name"]),
             ("Tên hiển thị:", self.inputs["displayName"]),
             ("Loại file:", self.inputs["type"]),
             ("Mô tả:", self.inputs["description"]),
@@ -230,6 +230,8 @@ class DocumentManager(ctk.CTk):
         doc = self.documents[index]
         self.inputs["id"].delete(0, tk.END)
         self.inputs["id"].insert(0, doc.get("id", ""))
+        self.inputs["name"].delete(0, tk.END)
+        self.inputs["name"].insert(0, os.path.splitext(doc.get("fileName", ""))[0])
         self.inputs["displayName"].delete(0, tk.END)
         self.inputs["displayName"].insert(0, doc.get("displayName", ""))
         self.inputs["type"].delete(0, tk.END)
@@ -287,62 +289,188 @@ class DocumentManager(ctk.CTk):
 
     def generate_random_filename(self, original_name):
         ext = os.path.splitext(original_name)[1]
-        random_str = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
-        return f"{random_str}{ext}"
+        name = self.inputs["name"].get().strip()
+        if not name:
+            name = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
+        
+        base_name = name
+        counter = 1
+        while True:
+            new_filename = f"{base_name}{ext}"
+            if not os.path.exists(os.path.join(self.files_dir, new_filename)):
+                return new_filename
+            base_name = f"{name}_{counter}"
+            counter += 1
 
     def create_html_for_document(self, doc):
         file_ext = os.path.splitext(doc['fileName'])[1].lower()
-
-        file_url = f"https://chuyentin-tailieu.a3sachhonaba.com/assets/files/{doc['fileName']}"
+        file_url = f"https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/{doc['fileName']}"
         
         if file_ext == '.pdf':
-            content = f"""<iframe class="file-viewer" src="https://chuyentin-tailieu.a3sachhonaba.com/viewer/pdf/web/viewer.html?file={file_url}"></iframe>"""
+            content = f"""
+                <div class="content-box mb-12 bg-white dark:bg-gray-850 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">PDF</h2>
+                    <div class="w-full h-96 border-2 border-gray-300 dark:border-gray-600 rounded-md overflow-hidden" style="max-height: 100%; max-width: 100%; height: 100vh; width: 100vw;">
+                        <iframe src="https://chuyentin-tailieu.a3sachhonaba.com/viewer/pdf/web/viewer.html?file={file_url}" class="w-full h-full" frameborder="0"></iframe>
+                    </div>
+                </div>
+            """
         elif file_ext in ('.png', '.jpg', '.jpeg', '.webp'):
-            content = f"""<img src="{file_url}" class="file-viewer" alt="{doc['displayName']}">"""
+            content = f"""
+                <div class="content-box mb-12 bg-white dark:bg-gray-850 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Hình Ảnh</h2>
+                    <div class="flex justify-center" style="max-height: 100%; max-width: 100%; height: 100vh; width: 100vw;">
+                        <img src="{file_url}" alt="Nội dung hình ảnh" class="max-w-full h-auto rounded-md border-2 border-gray-300 dark:border-gray-600">
+                    </div>
+                </div>
+            """
         elif file_ext in ('.mp4', '.avi', '.mkv', '.webm'):
-            content = f"""<video class="file-viewer" controls>
-                <source src="{file_url}" type="{doc['type']}">
-                {file_url}
-            </video>"""
+            content = f"""
+                <div class="content-box mb-12 bg-white dark:bg-gray-850 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Video</h2>
+                    <div class="aspect-w-16 aspect-h-9" style="max-height: 100%; max-width: 100%; height: 100vh; width: 100vw;">
+                        <video controls class="w-full rounded-md border-2 border-gray-300 dark:border-gray-600">
+                            <source src="{file_url}" type="video/mp4">
+                            Trình duyệt của bạn không hỗ trợ video.
+                        </video>
+                    </div>
+                </div>
+            """
         else:
-            content = f""""""
+            content = f"""<div class="content-box mb-12 bg-white dark:bg-gray-850 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Tài Liệu</h2>
+                    <p class="text-gray-700 dark:text-gray-300">Nhấn vào nút bên dưới để tải xuống tài liệu</p>
+                </div>"""
 
-        html_content = f"""<!DOCTYPE html>
-    <html lang="vi">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{doc['displayName']}</title>
-        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        <meta name="description" content="{doc['description']}">
-        <meta name="keywords" content="{', '.join(doc['tags'])}, THPT Chuyên Nguyễn Thị Minh Khai, A3 Chuyên Tin, A3 Sạch Hơn Aba, Chuyên Tin Học, NTMK, THPT, Tài Liệu Học Tập, Giáo Viên, Học Sinh">
-        <meta name="author" content="A3 Chuyên Tin">
-        <meta property="og:title" content="A3 Chuyên Tin - Tài Liệu {doc['id']}: {doc['displayName']}">
-        <meta property="og:description" content="{doc['description']}">
-        <meta property="og:type" content="article">
-        <meta property="article:published_time" content="{doc['uploadDate']}">
-        <meta property="article:tag" content="{', '.join(doc['tags'])}">
-        <style>
-            .file-viewer {{
-                width: 100%;
-                height: 100vh;
-                border: none;
-                display: block;
-                object-fit: contain;
+        html_content = f"""
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A3 Chuyên Tin - Tài Liệu | {doc['displayName']}</title>
+    <meta name="description" content="{doc['description']}, {', '.join(doc['tags'])}, THPT Chuyên Nguyễn Thị Minh Khai, A3 Chuyên Tin, A3 Sạch Hơn Aba, Chuyên Tin Học, NTMK, THPT, Tài Liệu Học Tập, Giáo Viên, Học Sinh">
+    <meta property="og:title" content="{doc['description']}, {', '.join(doc['tags'])}, THPT Chuyên Nguyễn Thị Minh Khai, A3 Chuyên Tin, A3 Sạch Hơn Aba, Chuyên Tin Học, NTMK, THPT, Tài Liệu Học Tập, Giáo Viên, Học Sinh">
+    <meta property="og:description" content="{doc['description']}, {', '.join(doc['tags'])}, THPT Chuyên Nguyễn Thị Minh Khai, A3 Chuyên Tin, A3 Sạch Hơn Aba, Chuyên Tin Học, NTMK, THPT, Tài Liệu Học Tập, Giáo Viên, Học Sinh">
+    <meta name="author" content="A3 Chuyên Tin">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {{
+            darkMode: 'class',
+            theme: {{
+                extend: {{
+                    colors: {{
+                        dark: {{
+                            800: '#1e293b',
+                            850: '#1a243b',
+                            900: '#0f172a',
+                        }}
+                    }}
+                }}
             }}
-        </style>
-    </head>
-    <body>
-        <div class="w-full h-screen flex flex-col items-center justify-center" style="background-color: #2a2a2e;">
-            {content}
-            <a href="{doc['fileName']}" class="inline-flex items-center text-white bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded-lg transition-colors duration-300">Tải về</a>
-        </div>    
-    </body>
-    </html>"""
+        }}
+    </script>
+    <style>
+        div {{
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }}
+        
+        .dark {{
+            color-scheme: dark;
+        }}
+        
+        .dark .content-box {{
+            background-color: #1a243b;
+            border-color: #2d3748;
+        }}
+        
+        .dark iframe {{
+            background-color: #1e293b;
+        }}
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 p-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex justify-end mb-4">
+            <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                <svg id="dark-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+                <svg id="light-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            </button>
+        </div>
+        
+        <h1 class="text-3xl font-bold text-center mb-8 text-blue-600 dark:text-blue-400">{doc['displayName']}</h1>
+        
+        {content}
+        
+        <div class="mb-8 text-center">
+            <button id="downloadBtn" class="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-300">
+                Tải Xuống Nội Dung
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        function initDarkMode() {{
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const darkIcon = document.getElementById('dark-icon');
+            const lightIcon = document.getElementById('light-icon');
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            
+            if (isDarkMode) {{
+                document.documentElement.classList.add('dark');
+                darkIcon.classList.add('hidden');
+                lightIcon.classList.remove('hidden');
+            }} else {{
+                document.documentElement.classList.remove('dark');
+                darkIcon.classList.remove('hidden');
+                lightIcon.classList.add('hidden');
+            }}
+            
+            darkModeToggle.addEventListener('click', () => {{
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('darkMode', isDark);
+                
+                if (isDark) {{
+                    darkIcon.classList.add('hidden');
+                    lightIcon.classList.remove('hidden');
+                }} else {{
+                    darkIcon.classList.remove('hidden');
+                    lightIcon.classList.add('hidden');
+                }}
+            }});
+        }}
+
+        function initDownloadButton() {{
+            document.getElementById('downloadBtn').addEventListener('click', function() {{
+                const url = '{file_url}';
+                const fileName = url.split('/').pop() || 'download';
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                alert('Đã bắt đầu tải xuống: ' + fileName);
+            }});
+        }}
+
+        document.addEventListener('DOMContentLoaded', function() {{
+            initDarkMode();
+            initDownloadButton();
+        }});
+    </script>
+</body>
+</html>
+"""
         
         html_filename = f"{os.path.splitext(doc['fileName'])[0]}.html"
-        html_path = os.path.join(self.html_dir, html_filename)
+        html_path = os.path.join(self.files_dir, html_filename)
         
         with open(html_path, "w", encoding="utf-8") as f:
             f.write(html_content)
@@ -356,7 +484,12 @@ class DocumentManager(ctk.CTk):
         original_name = os.path.basename(self.current_file_path)
         new_filename = self.generate_random_filename(original_name)
         dest_path = os.path.join(self.files_dir, new_filename)
-        shutil.copy(self.current_file_path, dest_path)
+        
+        try:
+            if os.path.abspath(self.current_file_path) != os.path.abspath(dest_path):
+                shutil.copy(self.current_file_path, dest_path)
+        except shutil.SameFileError:
+            pass
         
         upload_date = self.inputs["uploadDate"].get_date().strftime("%Y-%m-%d")
         new_doc = {
@@ -387,8 +520,9 @@ class DocumentManager(ctk.CTk):
         doc = self.documents[index]
         upload_date = self.inputs["uploadDate"].get_date().strftime("%Y-%m-%d")
         
-        old_filename = doc["fileName"]
-        old_html_path = os.path.join(self.html_dir, f"{os.path.splitext(doc['fileName'])[0]}.html")
+        old_html_path = os.path.join(self.files_dir, f"{os.path.splitext(doc['fileName'])[0]}.html")
+        if os.path.exists(old_html_path):
+            os.remove(old_html_path)
         
         doc.update({
             "displayName": self.inputs["displayName"].get(),
@@ -400,18 +534,20 @@ class DocumentManager(ctk.CTk):
         
         if self.current_file_path:
             original_name = os.path.basename(self.current_file_path)
-            new_filename = self.generate_random_filename(original_name)
-            dest_path = os.path.join(self.files_dir, new_filename)
-            shutil.copy(self.current_file_path, dest_path)
+            file_ext = os.path.splitext(original_name)[1]
             
-            old_file = os.path.join(self.files_dir, old_filename)
-            if os.path.exists(old_file):
+            new_filename = os.path.splitext(doc["fileName"])[0] + file_ext
+            dest_path = os.path.join(self.files_dir, new_filename)
+            
+            old_file = os.path.join(self.files_dir, doc["fileName"])
+            if os.path.exists(old_file) and old_file != dest_path:
                 os.remove(old_file)
+            
+            shutil.copy2(self.current_file_path, dest_path)
             
             doc["fileName"] = new_filename
         
-        if os.path.exists(old_html_path):
-            os.remove(old_html_path)
+        # Tạo HTML mới
         self.create_html_for_document(doc)
         
         self.update_list()
@@ -433,7 +569,7 @@ class DocumentManager(ctk.CTk):
             if os.path.exists(file_path):
                 os.remove(file_path)
             
-            html_path = os.path.join(self.html_dir, f"{os.path.splitext(doc['fileName'])[0]}.html")
+            html_path = os.path.join(self.files_dir, f"{os.path.splitext(doc['fileName'])[0]}.html")
             if os.path.exists(html_path):
                 os.remove(html_path)
             
