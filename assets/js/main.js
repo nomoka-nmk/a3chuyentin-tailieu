@@ -94,7 +94,7 @@ function displayDocuments(documents) {
         return;
     }
     
-    documents.sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate)).forEach((doc, index) => {
+    documents.sort((a, b) => b.id - a.id).forEach((doc, index) => {
         const icon = getFileIcon(doc.type);
         const colors = getFileTypeColors(doc.type);
         const filePath = `https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/${doc.fileName}.html`;
