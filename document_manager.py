@@ -547,7 +547,6 @@ class DocumentManager(ctk.CTk):
             
             doc["fileName"] = new_filename
         
-        # Tạo HTML mới
         self.create_html_for_document(doc)
         
         self.update_list()

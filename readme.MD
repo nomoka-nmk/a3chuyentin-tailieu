@@ -1,3 +1,5 @@
+[Truy cập ngay](https://chuyentin-tailieu.a3sachhonaba.com/)
+
 # A3 Chuyên Tin - Tài Liệu
 
 ## Giới thiệu
