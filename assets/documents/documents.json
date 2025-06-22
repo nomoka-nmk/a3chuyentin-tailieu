@@ -43,5 +43,18 @@
       "2024 2025",
       "HSG"
     ]
+  },
+  {
+    "id": "4",
+    "fileName": "s1wkpjej",
+    "displayName": "Kỳ Thi Tuyển Sinh Vào Lớp 10 THPT",
+    "type": "application/pdf",
+    "description": "Kỳ Thi Tuyển Sinh Vào Lớp 10 THPT",
+    "uploadDate": "2025-06-22",
+    "tags": [
+      "tuyển sinh 10",
+      "sóc trăng",
+      "THPT"
+    ]
   }
 ]

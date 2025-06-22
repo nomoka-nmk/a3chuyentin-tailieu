@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A3 Chuyên Tin - Tài Liệu | Kỳ Thi Tuyển Sinh Vào Lớp 10 THPT</title>
+    <meta name="description" content="Kỳ Thi Tuyển Sinh Vào Lớp 10 THPT, tuyển sinh 10, sóc trăng, THPT, THPT Chuyên Nguyễn Thị Minh Khai, A3 Chuyên Tin, A3 Sạch Hơn Aba, Chuyên Tin Học, NTMK, THPT, Tài Liệu Học Tập, Giáo Viên, Học Sinh">
+    <meta property="og:title" content="Kỳ Thi Tuyển Sinh Vào Lớp 10 THPT, tuyển sinh 10, sóc trăng, THPT, THPT Chuyên Nguyễn Thị Minh Khai, A3 Chuyên Tin, A3 Sạch Hơn Aba, Chuyên Tin Học, NTMK, THPT, Tài Liệu Học Tập, Giáo Viên, Học Sinh">
+    <meta property="og:description" content="Kỳ Thi Tuyển Sinh Vào Lớp 10 THPT, tuyển sinh 10, sóc trăng, THPT, THPT Chuyên Nguyễn Thị Minh Khai, A3 Chuyên Tin, A3 Sạch Hơn Aba, Chuyên Tin Học, NTMK, THPT, Tài Liệu Học Tập, Giáo Viên, Học Sinh">
+    <meta name="author" content="A3 Chuyên Tin">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            800: '#1e293b',
+                            850: '#1a243b',
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        div {
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .dark {
+            color-scheme: dark;
+        }
+        
+        .dark .content-box {
+            background-color: #1a243b;
+            border-color: #2d3748;
+        }
+        
+        .dark iframe {
+            background-color: #1e293b;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 p-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex justify-end mb-4">
+            <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                <svg id="dark-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+                <svg id="light-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            </button>
+        </div>
+        
+        <h1 class="text-3xl font-bold text-center mb-8 text-blue-600 dark:text-blue-400">Kỳ Thi Tuyển Sinh Vào Lớp 10 THPT</h1>
+        
+        
+                <div class="content-box mb-12 bg-white dark:bg-gray-850 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">PDF</h2>
+                    <div class="w-full h-96 border-2 border-gray-300 dark:border-gray-600 rounded-md overflow-hidden" style="max-height: 100%; max-width: 100%; height: 100vh; width: 100vw;">
+                        <iframe src="https://chuyentin-tailieu.a3sachhonaba.com/viewer/pdf/web/viewer.html?file=https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/s1wkpjej.pdf" class="w-full h-full" frameborder="0"></iframe>
+                    </div>
+                </div>
+            
+        
+        <div class="mb-8 text-center">
+            <button id="downloadBtn" class="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-300">
+                Tải Xuống Nội Dung
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        function initDarkMode() {
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const darkIcon = document.getElementById('dark-icon');
+            const lightIcon = document.getElementById('light-icon');
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+                darkIcon.classList.add('hidden');
+                lightIcon.classList.remove('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                darkIcon.classList.remove('hidden');
+                lightIcon.classList.add('hidden');
+            }
+            
+            darkModeToggle.addEventListener('click', () => {
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('darkMode', isDark);
+                
+                if (isDark) {
+                    darkIcon.classList.add('hidden');
+                    lightIcon.classList.remove('hidden');
+                } else {
+                    darkIcon.classList.remove('hidden');
+                    lightIcon.classList.add('hidden');
+                }
+            });
+        }
+
+        function initDownloadButton() {
+            document.getElementById('downloadBtn').addEventListener('click', function() {
+                const url = 'https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/s1wkpjej.pdf';
+                const fileName = url.split('/').pop() || 'download';
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                alert('Đã bắt đầu tải xuống: ' + fileName);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initDarkMode();
+            initDownloadButton();
+        });
+    </script>
+</body>
+</html>
