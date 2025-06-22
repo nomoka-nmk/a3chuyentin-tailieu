@@ -56,5 +56,21 @@
       "sóc trăng",
       "THPT"
     ]
+  },
+  {
+    "id": "5",
+    "fileName": "l4633g2z",
+    "displayName": "Sách Giáo Khoa Tin Học 11 Bằng C++",
+    "type": "application/pdf",
+    "description": "Sách Giáo Khoa Tin Học 11 Bằng C++",
+    "uploadDate": "2025-06-22",
+    "tags": [
+      "CPP",
+      "C++",
+      "sách",
+      "tài liệu",
+      "ebook",
+      "chuyên tin"
+    ]
   }
 ]
