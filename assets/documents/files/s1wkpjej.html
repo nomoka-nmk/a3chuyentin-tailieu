@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A3 Chuyên Tin - Tài Liệu | Kỳ Thi Tuyển Sinh Vào Lớp 10 THPT Tỉnh Sóc Trăng Năm Học 2025-2026</title>
-    <meta name="description" content="Kỳ Thi Tuyển Sinh Vào Lớp 10 THPT Tỉnh Sóc Trăng Năm Học 2025-2026T, tuyển sinh 10, sóc trăng, THPT, THPT Chuyên Nguyễn Thị Minh Khai, A3 Chuyên Tin, A3 Sạch Hơn Aba, Chuyên Tin Học, NTMK, THPT, Tài Liệu Học Tập, Giáo Viên, Học Sinh">
+    <meta name="description" content="Kỳ Thi Tuyển Sinh Vào Lớp 10 THPT Tỉnh Sóc Trăng Năm Học 2025-2026, tuyển sinh 10, sóc trăng, THPT, THPT Chuyên Nguyễn Thị Minh Khai, A3 Chuyên Tin, A3 Sạch Hơn Aba, Chuyên Tin Học, NTMK, THPT, Tài Liệu Học Tập, Giáo Viên, Học Sinh">
     <meta property="og:title" content="Kỳ Thi Tuyển Sinh Vào Lớp 10 THPT Tỉnh Sóc Trăng Năm Học 2025-2026, tuyển sinh 10, sóc trăng, THPT, THPT Chuyên Nguyễn Thị Minh Khai, A3 Chuyên Tin, A3 Sạch Hơn Aba, Chuyên Tin Học, NTMK, THPT, Tài Liệu Học Tập, Giáo Viên, Học Sinh">
     <meta property="og:description" content="Kỳ Thi Tuyển Sinh Vào Lớp 10 THPT Tỉnh Sóc Trăng Năm Học 2025-2026, tuyển sinh 10, sóc trăng, THPT, THPT Chuyên Nguyễn Thị Minh Khai, A3 Chuyên Tin, A3 Sạch Hơn Aba, Chuyên Tin Học, NTMK, THPT, Tài Liệu Học Tập, Giáo Viên, Học Sinh">
     <meta name="author" content="A3 Chuyên Tin">
@@ -67,20 +67,10 @@
                         <iframe src="https://chuyentin-tailieu.a3sachhonaba.com/viewer/pdf/web/viewer.html?file=https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/s1wkpjej.pdf" class="w-full h-full" frameborder="0"></iframe>
                     </div>
                 </div>
-                <div class="mb-8 text-center">
-        <button id="downloadBtn1" class="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-300">
-            Tải Xuống Nội Dung
-        </button>
-        </div>
-                <div class="content-box mb-12 bg-white dark:bg-gray-850 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
-                    <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">PDF</h2>
-                    <div class="w-full h-96 border-2 border-gray-300 dark:border-gray-600 rounded-md overflow-hidden" style="max-height: 100%; max-width: 100%; height: 100vh; width: 100vw;">
-                        <iframe src="https://chuyentin-tailieu.a3sachhonaba.com/viewer/pdf/web/viewer.html?file=https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/s1wkpjej_goc.pdf" class="w-full h-full" frameborder="0"></iframe>
-                    </div>
-                </div>
-
+            
+        
         <div class="mb-8 text-center">
-            <button id="downloadBtn2" class="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-300">
+            <button id="downloadBtn" class="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-300">
                 Tải Xuống Nội Dung
             </button>
         </div>
@@ -118,21 +108,8 @@
         }
 
         function initDownloadButton() {
-            document.getElementById('downloadBtn1').addEventListener('click', function() {
+            document.getElementById('downloadBtn').addEventListener('click', function() {
                 const url = 'https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/s1wkpjej.pdf';
-                const fileName = url.split('/').pop() || 'download';
-                
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = fileName;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                
-                alert('Đã bắt đầu tải xuống: ' + fileName);
-            });
-            document.getElementById('downloadBtn2').addEventListener('click', function() {
-                const url = 'https://chuyentin-tailieu.a3sachhonaba.com/assets/documents/files/s1wkpjej_goc.pdf';
                 const fileName = url.split('/').pop() || 'download';
                 
                 const a = document.createElement('a');
